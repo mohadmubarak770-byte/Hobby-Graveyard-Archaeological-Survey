@@ -226,34 +226,37 @@
             )
             
             ;; Update hobby data
-            (map-set hobbies
-                { hobby-id: hobby-id }
-                (merge hobby-data {
-                    current-enthusiasm: new-enthusiasm,
-                    last-update: stacks-block-height,
-                    decay-rate: new-decay-rate,
-                    predicted-abandonment: predicted-days,
-                    status: new-status
-                })
-            )
-            
-            ;; Add history entry
-            (map-set hobby-history
-                { hobby-id: hobby-id, entry: u1 }
-                {
-                    date: stacks-block-height,
-                    enthusiasm: new-enthusiasm,
-                    notes: notes
-                }
-            )
-            
-            ;; Update abandoned count if hobby is abandoned
-            (if (is-eq new-status "declining")
-                (var-set total-abandoned (+ (var-get total-abandoned) u1))
+            (begin
+                (map-set hobbies
+                    { hobby-id: hobby-id }
+                    (merge hobby-data {
+                        current-enthusiasm: new-enthusiasm,
+                        last-update: stacks-block-height,
+                        decay-rate: new-decay-rate,
+                        predicted-abandonment: predicted-days,
+                        status: new-status
+                    })
+                )
+                
+                ;; Add history entry
+                (map-set hobby-history
+                    { hobby-id: hobby-id, entry: u1 }
+                    {
+                        date: stacks-block-height,
+                        enthusiasm: new-enthusiasm,
+                        notes: notes
+                    }
+                )
+                
+                ;; Update abandoned count if hobby is abandoned
+                (if (is-eq new-status "declining")
+                    (var-set total-abandoned (+ (var-get total-abandoned) u1))
+                    true
+                )
+                
                 (ok true)
             )
         )
-        (ok true)
     )
 )
 

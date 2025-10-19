@@ -283,12 +283,13 @@
         ;; Update global stats
         (var-set next-item-id (+ item-id u1))
         (var-set total-equipment (+ (var-get total-equipment) u1))
-        (if (> creativity-score (var-get most-creative-storage))
-            (var-set most-creative-storage creativity-score)
-            (ok true)
+        (begin
+            (if (> creativity-score (var-get most-creative-storage))
+                (var-set most-creative-storage creativity-score)
+                true
+            )
+            (ok item-id)
         )
-        
-        (ok item-id)
     )
 )
 
@@ -376,11 +377,12 @@
         )
         
         ;; Update global creativity record
-        (if (> new-creativity (var-get most-creative-storage))
-            (var-set most-creative-storage new-creativity)
+        (begin
+            (if (> new-creativity (var-get most-creative-storage))
+                (var-set most-creative-storage new-creativity)
+                true
+            )
             (ok true)
         )
-        
-        (ok true)
     )
 )
